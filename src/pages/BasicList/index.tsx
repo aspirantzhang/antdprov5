@@ -1,41 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Row, Col, Card, Button, Pagination, Space } from 'antd';
+import { useRequest } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import styles from './index.less';
 
-const index = () => {
-  const dataSource = [
-    {
-      key: '1',
-      name: '胡彦斌',
-      age: 32,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '2',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-  ];
+const Index = () => {
+  const [page, setPage] = useState(1);
+  const [per_page, setPerPage] = useState(10);
+  const init = useRequest<{ data: BasicListApi.Data }>(
+    `https://public-api-v2.aspirantzhang.com/api/admins?X-API-KEY=antd&page=${page}&per_page=${per_page}`,
+  );
 
-  const columns = [
-    {
-      title: '姓名',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: '年龄',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: '住址',
-      dataIndex: 'address',
-      key: 'address',
-    },
-  ];
+  useEffect(() => {
+    init.run();
+  }, [page, per_page]);
+
   const searchLayout = () => {};
   const beforeTableLayout = () => {
     return (
@@ -52,6 +31,11 @@ const index = () => {
       </Row>
     );
   };
+  const paginationChangeHandler = (_page: any, _per_page: any) => {
+    setPage(_page);
+    setPerPage(_per_page);
+  };
+
   const afterTableLayout = () => {
     return (
       <Row>
@@ -59,7 +43,16 @@ const index = () => {
           ...
         </Col>
         <Col xs={24} sm={12} className={styles.tableToolbar}>
-          <Pagination />
+          <Pagination
+            total={init?.data?.meta?.total || 0}
+            current={init?.data?.meta?.page || 1}
+            pageSize={init?.data?.meta?.per_page || 10}
+            showSizeChanger
+            showQuickJumper
+            showTotal={(total) => `Total ${total} items`}
+            onChange={paginationChangeHandler}
+            onShowSizeChange={paginationChangeHandler}
+          />
         </Col>
       </Row>
     );
@@ -70,11 +63,16 @@ const index = () => {
       {searchLayout()}
       <Card>
         {beforeTableLayout()}
-        <Table dataSource={dataSource} columns={columns} pagination={false} />
+        <Table
+          dataSource={init?.data?.dataSource}
+          columns={init?.data?.layout?.tableColumn.filter((item) => item.hideInColumn !== true)}
+          pagination={false}
+          loading={init.loading}
+        />
         {afterTableLayout()}
       </Card>
     </PageContainer>
   );
 };
 
-export default index;
+export default Index;
