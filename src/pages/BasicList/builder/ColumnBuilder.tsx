@@ -31,11 +31,12 @@ const ColumnBuilder = (tableColumn: BasicListApi.TableColumn[] | undefined) => {
     }
   });
 
-  const idColumn = [
+  const idColumn: BasicListApi.TableColumn[] = [
     {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
+      sorter: true,
     },
   ];
 
