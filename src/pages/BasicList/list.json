@@ -1,0 +1,298 @@
+{
+  "success": true,
+  "message": "",
+  "data": {
+    "page": { "title": "User List", "type": "basicList", "searchBar": true, "trash": false },
+    "layout": {
+      "tableColumn": [
+        { "title": "Username", "dataIndex": "username", "key": "username", "type": "text" },
+        {
+          "title": "Groups",
+          "dataIndex": "groups",
+          "key": "groups",
+          "type": "tree",
+          "data": [
+            {
+              "id": 69,
+              "parent_id": 0,
+              "name": "Group 001",
+              "create_time": "2020-11-24T15:25:11+08:00",
+              "delete_time": null,
+              "status": 1,
+              "value": 69,
+              "title": "Group 001",
+              "depth": 1
+            },
+            {
+              "id": 68,
+              "parent_id": 0,
+              "name": "Group 0033",
+              "create_time": "2020-11-02T16:11:24+08:00",
+              "delete_time": null,
+              "status": 1,
+              "value": 68,
+              "title": "Group 0033",
+              "depth": 1
+            },
+            {
+              "id": 53,
+              "parent_id": 0,
+              "name": "Admin Group",
+              "create_time": "2020-09-21T00:10:30+08:00",
+              "delete_time": null,
+              "status": 1,
+              "value": 53,
+              "title": "Admin Group",
+              "depth": 1
+            }
+          ],
+          "hideInColumn": true
+        },
+        {
+          "title": "Display Name",
+          "dataIndex": "display_name",
+          "key": "display_name",
+          "type": "text"
+        },
+        {
+          "title": "Create Time",
+          "dataIndex": "create_time",
+          "key": "create_time",
+          "type": "datetime",
+          "sorter": true
+        },
+        {
+          "title": "Status",
+          "dataIndex": "status",
+          "key": "status",
+          "type": "switch",
+          "data": [
+            { "title": "Enabled", "value": 1 },
+            { "title": "Disabled", "value": 0 }
+          ]
+        },
+        {
+          "title": "Trash",
+          "dataIndex": "trash",
+          "key": "trash",
+          "type": "select",
+          "data": [
+            { "title": "Only Trashed", "value": "onlyTrashed" },
+            { "title": "With Trashed", "value": "withTrashed" },
+            { "title": "Without Trashed", "value": "withoutTrashed" }
+          ],
+          "mode": "",
+          "hideInColumn": true
+        },
+        {
+          "dataIndex": "actions",
+          "key": "actions",
+          "type": "actions",
+          "actions": [
+            {
+              "component": "button",
+              "text": "Edit",
+              "type": "primary",
+              "action": "modal",
+              "uri": "/api/admins/:id"
+            },
+            {
+              "component": "button",
+              "text": "Page edit",
+              "type": "default",
+              "action": "page",
+              "uri": "/api/admins/:id"
+            },
+            {
+              "component": "button",
+              "text": "Delete",
+              "type": "default",
+              "action": "delete",
+              "uri": "/api/admins/delete",
+              "method": "post"
+            }
+          ],
+          "title": "Action"
+        }
+      ],
+      "tableToolBar": [
+        {
+          "component": "button",
+          "text": "Add",
+          "type": "primary",
+          "action": "modal",
+          "id": "add",
+          "uri": "/api/admins/add"
+        },
+        {
+          "component": "button",
+          "text": "Page add",
+          "type": "default",
+          "action": "page",
+          "uri": "/api/admins/add"
+        },
+        { "component": "button", "text": "Reload", "type": "default", "action": "reload" }
+      ],
+      "batchToolBar": [
+        {
+          "component": "button",
+          "text": "Delete",
+          "type": "danger",
+          "action": "delete",
+          "uri": "/api/admins/delete",
+          "method": "post"
+        },
+        { "component": "button", "text": "Disable", "type": "default", "action": "batchDisable" }
+      ]
+    },
+    "dataSource": [
+      {
+        "id": 262,
+        "username": "admin25",
+        "display_name": "3333",
+        "create_time": "2020-12-27T15:04:24+08:00",
+        "delete_time": null,
+        "status": 1,
+        "groups": []
+      },
+      {
+        "id": 261,
+        "username": "admin24",
+        "display_name": "",
+        "create_time": "2020-12-27T15:03:41+08:00",
+        "delete_time": null,
+        "status": 1,
+        "groups": []
+      },
+      {
+        "id": 260,
+        "username": "admin23",
+        "display_name": "",
+        "create_time": "2020-12-24T17:02:02+08:00",
+        "delete_time": null,
+        "status": 1,
+        "groups": []
+      },
+      {
+        "id": 259,
+        "username": "admin22",
+        "display_name": "",
+        "create_time": "2020-12-23T16:10:59+08:00",
+        "delete_time": null,
+        "status": 1,
+        "groups": []
+      },
+      {
+        "id": 258,
+        "username": "admin21",
+        "display_name": "",
+        "create_time": "2020-12-23T15:32:01+08:00",
+        "delete_time": null,
+        "status": 1,
+        "groups": []
+      },
+      {
+        "id": 254,
+        "username": "admin17",
+        "display_name": "admin17",
+        "create_time": "2020-12-17T12:48:53+08:00",
+        "delete_time": null,
+        "status": 1,
+        "groups": []
+      },
+      {
+        "id": 253,
+        "username": "admin16",
+        "display_name": "",
+        "create_time": "2020-11-18T17:58:16+08:00",
+        "delete_time": null,
+        "status": 1,
+        "groups": [
+          {
+            "id": 53,
+            "parent_id": 0,
+            "name": "Admin Group",
+            "create_time": "2020-09-21T00:10:30+08:00",
+            "update_time": "2021-02-11T17:41:19+08:00",
+            "delete_time": null,
+            "status": 1,
+            "pivot": {
+              "id": 227,
+              "admin_id": 253,
+              "group_id": 53,
+              "create_time": "0000-00-00 00:00:00",
+              "update_time": "0000-00-00 00:00:00",
+              "delete_time": null,
+              "status": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": 252,
+        "username": "admin15",
+        "display_name": "admin15",
+        "create_time": "2020-12-16T17:57:46+08:00",
+        "delete_time": null,
+        "status": 0,
+        "groups": []
+      },
+      {
+        "id": 250,
+        "username": "admin13",
+        "display_name": "ADMIN131",
+        "create_time": "2020-11-24T17:02:14+08:00",
+        "delete_time": null,
+        "status": 1,
+        "groups": [
+          {
+            "id": 69,
+            "parent_id": 0,
+            "name": "Group 001",
+            "create_time": "2020-11-24T15:25:11+08:00",
+            "update_time": "2021-01-18T14:50:34+08:00",
+            "delete_time": null,
+            "status": 1,
+            "pivot": {
+              "id": 225,
+              "admin_id": 250,
+              "group_id": 69,
+              "create_time": "0000-00-00 00:00:00",
+              "update_time": "0000-00-00 00:00:00",
+              "delete_time": null,
+              "status": 1
+            }
+          },
+          {
+            "id": 68,
+            "parent_id": 0,
+            "name": "Group 0033",
+            "create_time": "2020-11-02T16:11:24+08:00",
+            "update_time": "2020-11-04T16:12:19+08:00",
+            "delete_time": null,
+            "status": 1,
+            "pivot": {
+              "id": 226,
+              "admin_id": 250,
+              "group_id": 68,
+              "create_time": "0000-00-00 00:00:00",
+              "update_time": "0000-00-00 00:00:00",
+              "delete_time": null,
+              "status": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": 249,
+        "username": "admin12",
+        "display_name": "",
+        "create_time": "2020-11-24T17:02:08+08:00",
+        "delete_time": null,
+        "status": 1,
+        "groups": []
+      }
+    ],
+    "meta": { "total": 24, "per_page": 10, "page": 1 }
+  }
+}

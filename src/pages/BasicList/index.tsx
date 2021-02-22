@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Row, Col, Card, Button, Pagination, Space } from 'antd';
+import { Table, Row, Col, Card, Pagination, Space } from 'antd';
 import { useRequest } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
+import ColumnBuilder from './builder/ColumnBuilder';
+import ActionBuilder from './builder/ActionBuilder';
 import styles from './index.less';
 
 const Index = () => {
@@ -23,10 +25,7 @@ const Index = () => {
           ...
         </Col>
         <Col xs={24} sm={12} className={styles.tableToolbar}>
-          <Space>
-            <Button type="primary">Add</Button>
-            <Button type="primary">Add2</Button>
-          </Space>
+          <Space>{ActionBuilder(init?.data?.layout?.tableToolBar)}</Space>
         </Col>
       </Row>
     );
@@ -65,7 +64,7 @@ const Index = () => {
         {beforeTableLayout()}
         <Table
           dataSource={init?.data?.dataSource}
-          columns={init?.data?.layout?.tableColumn.filter((item) => item.hideInColumn !== true)}
+          columns={ColumnBuilder(init?.data?.layout?.tableColumn)}
           pagination={false}
           loading={init.loading}
         />

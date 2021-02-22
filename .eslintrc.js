@@ -5,4 +5,16 @@ module.exports = {
     page: true,
     REACT_APP_ENV: true,
   },
+  rules: {
+    'no-param-reassign': ['error', { props: false }],
+    '@typescript-eslint/consistent-type-definitions': 'off',
+  },
+  overrides: [
+    {
+      files: ['*.test.js', '*.test.ts', '*.test.tsx'],
+      rules: {
+        '@typescript-eslint/no-unused-expressions': 'off',
+      },
+    },
+  ],
 };
