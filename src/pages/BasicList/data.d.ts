@@ -1,98 +1,78 @@
 declare module BasicListApi {
-  export interface Page {
+  type ActionHandler = (action: BasicListApi.Action, record: any) => void;
+
+  type Page = {
     title: string;
     type: string;
-    searchBar: boolean;
-    trash: boolean;
-  }
+    searchBar?: boolean;
+    trash?: boolean;
+  };
 
-  export interface Datum {
-    id: number;
-    parent_id: number;
-    name: string;
-    create_time: Date;
-    delete_time?: any;
-    status: number;
-    value: any;
-    title: string;
-    depth: number;
-  }
-
-  export interface Action {
+  type Action = {
     component: string;
     text: string;
     type: string;
     action: string;
-    uri: string;
-    method: string;
-  }
+    uri?: string;
+    method?: string;
+  };
 
-  export interface TableColumn {
+  type Field = {
     title: string;
     dataIndex: string;
     key: string;
-    type?: string;
-    data?: Datum[];
-    hideInColumn?: boolean;
-    sorter?: boolean;
-    mode?: string;
-    actions?: Action[];
     [key: string]: any;
-  }
+  };
 
-  export interface Layout {
-    tableColumn: TableColumn[];
-    tableToolBar: Action[];
-    batchToolBar: Action[];
-  }
+  type DataSource = {
+    [key: string]: any;
+  };
 
-  export interface Pivot {
-    id: number;
-    admin_id: number;
-    group_id: number;
-    create_time: string;
-    update_time: string;
-    delete_time?: any;
-    status: number;
-  }
-
-  export interface Group {
-    id: number;
-    parent_id: number;
-    name: string;
-    create_time: Date;
-    update_time: Date;
-    delete_time?: any;
-    status: number;
-    pivot: Pivot;
-  }
-
-  export interface DataSource {
-    id: number;
-    username: string;
-    display_name: string;
-    create_time: Date;
-    delete_time?: any;
-    status: number;
-    groups: Group[];
-  }
-
-  export interface Meta {
+  type Meta = {
     total: number;
     per_page: number;
     page: number;
-  }
+  };
 
-  export interface Data {
+  type Tabs = {
+    name: string;
+    title: string;
+    data: Field[];
+  };
+
+  type Actions = {
+    name: string;
+    title: string;
+    data: Action[];
+  };
+
+  type ListLayout = {
+    tableColumn: Field[];
+    tableToolBar: Action[];
+    batchToolBar: Action[];
+  };
+
+  type PageLayout = {
+    tabs: Tabs[];
+    actions: Actions[];
+  };
+
+  type ListData = {
     page: Page;
-    layout: Layout;
+    layout: ListLayout;
     dataSource: DataSource[];
     meta: Meta;
-  }
+  };
 
-  export interface RootObject {
+  type PageData = {
+    page: Page;
+    layout: PageLayout;
+    dataSource: DataSource;
+  };
+
+  type Root = {
     success: boolean;
     message: string;
-    data: Data;
-  }
+    data: PageData | ListData;
+  };
 }
