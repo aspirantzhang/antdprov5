@@ -12,7 +12,7 @@ const Modal = ({
   modalUri,
 }: {
   modalVisible: boolean;
-  hideModal: () => void;
+  hideModal: (reload?: boolean) => void;
   modalUri: string;
 }) => {
   const [form] = Form.useForm();
@@ -46,7 +46,7 @@ const Modal = ({
           content: data.message,
           key: 'process',
         });
-        hideModal();
+        hideModal(true);
       },
       formatResult: (res: any) => {
         return res;
@@ -73,7 +73,6 @@ const Modal = ({
   };
 
   const onFinish = (values: any) => {
-    console.log(values);
     request.run(values);
   };
 
@@ -82,6 +81,12 @@ const Modal = ({
       case 'submit':
         form.setFieldsValue({ uri: action.uri, method: action.method });
         form.submit();
+        break;
+      case 'cancel':
+        hideModal();
+        break;
+      case 'reset':
+        form.resetFields();
         break;
 
       default:
@@ -94,7 +99,9 @@ const Modal = ({
       <AntdModal
         title={init?.data?.page?.title}
         visible={modalVisible}
-        onCancel={hideModal}
+        onCancel={() => {
+          hideModal();
+        }}
         footer={ActionBuilder(init?.data?.layout?.actions[0]?.data, actionHandler, request.loading)}
         maskClosable={false}
       >
