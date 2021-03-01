@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 export const setFieldsAdaptor = (data: BasicListApi.PageData) => {
-  if (data?.layout?.tabs && data?.dataSource) {
+  if (data?.layout?.tabs && data.dataSource) {
     const result = {};
     data.layout.tabs.forEach((tab) => {
       tab.data.forEach((field) => {

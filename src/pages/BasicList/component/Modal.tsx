@@ -17,6 +17,7 @@ const Modal = ({
   modalUri: string;
 }) => {
   const [form] = Form.useForm();
+
   const init = useRequest<{ data: BasicListApi.PageData }>(
     `https://public-api-v2.aspirantzhang.com${modalUri}?X-API-KEY=antd`,
     {
@@ -26,7 +27,6 @@ const Modal = ({
       },
     },
   );
-
   const request = useRequest(
     (values: any) => {
       message.loading({ content: 'Processing...', key: 'process', duration: 0 });
@@ -68,16 +68,7 @@ const Modal = ({
     }
   }, [init.data]);
 
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
-  };
-
-  const onFinish = (values: any) => {
-    request.run(values);
-  };
-
-  const actionHandler = (action: BasicListApi.Action) => {
+  function actionHandler(action: BasicListApi.Action) {
     switch (action.action) {
       case 'submit':
         form.setFieldsValue({ uri: action.uri, method: action.method });
@@ -93,6 +84,15 @@ const Modal = ({
       default:
         break;
     }
+  }
+
+  const onFinish = (values: any) => {
+    request.run(values);
+  };
+
+  const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
   };
 
   return (
@@ -105,6 +105,7 @@ const Modal = ({
         }}
         footer={ActionBuilder(init?.data?.layout?.actions[0]?.data, actionHandler, request.loading)}
         maskClosable={false}
+        forceRender
       >
         {init?.loading ? (
           <Spin className={styles.formSpin} tip="Loading..." />
