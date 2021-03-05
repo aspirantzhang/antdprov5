@@ -1,12 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Row, Col, Card, Pagination, Space, Modal as AntdModal, message } from 'antd';
+import {
+  Table,
+  Row,
+  Col,
+  Card,
+  Pagination,
+  Space,
+  Modal as AntdModal,
+  message,
+  Tooltip,
+  Button,
+  Form,
+  InputNumber,
+} from 'antd';
 import { useRequest, useIntl, history } from 'umi';
-import { useSessionStorageState } from 'ahooks';
+import { useSessionStorageState, useToggle } from 'ahooks';
+import { stringify } from 'query-string';
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import QueueAnim from 'rc-queue-anim';
+import { ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import ColumnBuilder from './builder/ColumnBuilder';
 import ActionBuilder from './builder/ActionBuilder';
+import SearchBuilder from './builder/SearchBuilder';
 import Modal from './component/Modal';
+import { submitFieldsAdaptor } from './helper';
 import styles from './index.less';
 
 const Index = () => {
@@ -20,12 +37,20 @@ const Index = () => {
     'basicListTableColumns',
     [],
   );
+  const [searchVisible, searchAction] = useToggle(false);
   const { confirm } = AntdModal;
   const lang = useIntl();
+  const [searchForm] = Form.useForm();
 
-  const init = useRequest<{ data: BasicListApi.ListData }>(
-    `https://public-api-v2.aspirantzhang.com/api/admins?X-API-KEY=antd${pageQuery}${sortQuery}`,
-  );
+  const init = useRequest<{ data: BasicListApi.ListData }>((values: any) => {
+    return {
+      url: `https://public-api-v2.aspirantzhang.com/api/admins?X-API-KEY=antd${pageQuery}${sortQuery}`,
+      params: values,
+      paramsSerializer: (params: any) => {
+        return stringify(params, { arrayFormat: 'comma', skipEmptyString: true, skipNull: true });
+      },
+    };
+  });
   const request = useRequest(
     (values: any) => {
       message.loading({ content: 'Processing...', key: 'process', duration: 0 });
@@ -162,7 +187,47 @@ const Index = () => {
     },
   };
 
-  const searchLayout = () => {};
+  const onFinish = (value: any) => {
+    init.run(submitFieldsAdaptor(value));
+  };
+
+  const searchLayout = () => {
+    return (
+      <QueueAnim type="top">
+        {searchVisible && (
+          <Card className={styles.searchForm} key="searchForm">
+            <Form onFinish={onFinish} form={searchForm}>
+              <Row gutter={24}>
+                <Col sm={6}>
+                  <Form.Item label="ID" name="id" key="id">
+                    <InputNumber style={{ width: '100%' }} />
+                  </Form.Item>
+                </Col>
+                {SearchBuilder(init.data?.layout.tableColumn)}
+              </Row>
+              <Row>
+                <Col sm={24} className={styles.textAlignRight}>
+                  <Space>
+                    <Button type="primary" htmlType="submit">
+                      Submit
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        init.run();
+                        searchForm.resetFields();
+                      }}
+                    >
+                      Clear
+                    </Button>
+                  </Space>
+                </Col>
+              </Row>
+            </Form>
+          </Card>
+        )}
+      </QueueAnim>
+    );
+  };
   const beforeTableLayout = () => {
     return (
       <Row>
@@ -170,7 +235,19 @@ const Index = () => {
           ...
         </Col>
         <Col xs={24} sm={12} className={styles.tableToolbar}>
-          <Space>{ActionBuilder(init?.data?.layout?.tableToolBar, actionHandler)}</Space>
+          <Space>
+            <Tooltip title="search">
+              <Button
+                shape="circle"
+                icon={<SearchOutlined />}
+                onClick={() => {
+                  searchAction.toggle();
+                }}
+                type={searchVisible ? 'primary' : 'default'}
+              />
+            </Tooltip>
+            {ActionBuilder(init?.data?.layout?.tableToolBar, actionHandler)}
+          </Space>
         </Col>
       </Row>
     );

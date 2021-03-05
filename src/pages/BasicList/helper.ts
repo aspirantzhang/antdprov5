@@ -27,6 +27,14 @@ export const submitFieldsAdaptor = (formValues: any) => {
     if (moment.isMoment(formValues[key])) {
       result[key] = moment(formValues[key]).format();
     }
+    if (Array.isArray(formValues[key])) {
+      result[key] = formValues[key].map((innerValue: any) => {
+        if (moment.isMoment(innerValue)) {
+          return moment(innerValue).format();
+        }
+        return innerValue;
+      });
+    }
   });
   return result;
 };

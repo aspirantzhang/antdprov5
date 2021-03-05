@@ -60,6 +60,8 @@
     "moment": "^2.25.3",
     "omit.js": "^2.0.2",
     "qs": "^6.9.0",
+    "query-string": "^6.14.1",
+    "rc-queue-anim": "^1.8.5",
     "react": "^17.0.0",
     "react-dev-inspector": "^1.1.1",
     "react-dom": "^17.0.0",
