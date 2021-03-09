@@ -7,10 +7,10 @@ import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import type { ResponseError } from 'umi-request';
-import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
-import { BookOutlined, LinkOutlined } from '@ant-design/icons';
-
-const isDev = process.env.NODE_ENV === 'development';
+import {
+  currentUser as queryCurrentUser,
+  currentMenu as queryCurrentMenu,
+} from './services/ant-design-pro/api';
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
@@ -23,6 +23,7 @@ export const initialStateConfig = {
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
+  currentMenu?: any;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
   const fetchUserInfo = async () => {
@@ -34,12 +35,23 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
+  const fetchMenu = async () => {
+    try {
+      const currentMenu = await queryCurrentMenu();
+      return currentMenu;
+    } catch (error) {
+      message.error('Get menu data failed.', 10);
+    }
+    return undefined;
+  };
   // 如果是登录页面，不执行
   if (history.location.pathname !== '/user/login') {
     const currentUser = await fetchUserInfo();
+    const currentMenu = await fetchMenu();
     return {
       fetchUserInfo,
       currentUser,
+      currentMenu,
       settings: {},
     };
   }
@@ -62,31 +74,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         history.push('/user/login');
       }
     },
-    links: isDev
-      ? [
-          <>
-            <LinkOutlined />
-            <span
-              onClick={() => {
-                window.open('/umi/plugin/openapi');
-              }}
-            >
-              openAPI 文档
-            </span>
-          </>,
-          <>
-            <BookOutlined />
-            <span
-              onClick={() => {
-                window.open('/~docs');
-              }}
-            >
-              业务组件文档
-            </span>
-          </>,
-        ]
-      : [],
     menuHeaderRender: undefined,
+    menuDataRender: () => {
+      return initialState?.currentMenu;
+    },
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     ...initialState?.settings,

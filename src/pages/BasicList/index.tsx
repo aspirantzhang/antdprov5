@@ -13,7 +13,7 @@ import {
   Form,
   InputNumber,
 } from 'antd';
-import { useRequest, useIntl, history } from 'umi';
+import { useRequest, useIntl, history, useLocation } from 'umi';
 import { useSessionStorageState, useToggle } from 'ahooks';
 import { stringify } from 'query-string';
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
@@ -41,10 +41,14 @@ const Index = () => {
   const { confirm } = AntdModal;
   const lang = useIntl();
   const [searchForm] = Form.useForm();
+  const location = useLocation();
 
   const init = useRequest<{ data: BasicListApi.ListData }>((values: any) => {
     return {
-      url: `https://public-api-v2.aspirantzhang.com/api/admins?X-API-KEY=antd${pageQuery}${sortQuery}`,
+      url: `https://public-api-v2.aspirantzhang.com${location.pathname.replace(
+        '/basic-list',
+        '',
+      )}?X-API-KEY=antd${pageQuery}${sortQuery}`,
       params: values,
       paramsSerializer: (params: any) => {
         return stringify(params, { arrayFormat: 'comma', skipEmptyString: true, skipNull: true });
@@ -80,7 +84,7 @@ const Index = () => {
 
   useEffect(() => {
     init.run();
-  }, [pageQuery, sortQuery]);
+  }, [pageQuery, sortQuery, location.pathname]);
 
   useEffect(() => {
     if (init?.data?.layout?.tableColumn) {
