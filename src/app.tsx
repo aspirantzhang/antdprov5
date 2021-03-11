@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import type { Settings as LayoutSettings, MenuDataItem } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { message } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
@@ -23,7 +23,7 @@ export const initialStateConfig = {
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
-  currentMenu?: any;
+  currentMenu?: MenuDataItem[];
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
   const fetchUserInfo = async () => {
@@ -76,7 +76,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     },
     menuHeaderRender: undefined,
     menuDataRender: () => {
-      return initialState?.currentMenu;
+      return initialState?.currentMenu || [];
     },
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,

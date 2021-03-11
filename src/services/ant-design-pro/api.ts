@@ -1,6 +1,7 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from 'umi';
+import { MenuDataItem } from '@ant-design/pro-layout';
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
@@ -11,7 +12,7 @@ export async function currentUser(options?: { [key: string]: any }) {
 }
 
 export async function currentMenu(options?: { [key: string]: any }) {
-  return request('https://public-api-v2.aspirantzhang.com/api/menus/backend', {
+  return request<MenuDataItem[]>('https://public-api-v2.aspirantzhang.com/api/menus/backend', {
     method: 'GET',
     ...(options || {}),
   });

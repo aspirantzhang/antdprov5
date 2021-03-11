@@ -14,7 +14,7 @@ import {
   InputNumber,
 } from 'antd';
 import { useRequest, useIntl, history, useLocation } from 'umi';
-import { useSessionStorageState, useToggle } from 'ahooks';
+import { useSessionStorageState, useToggle, useUpdateEffect } from 'ahooks';
 import { stringify } from 'query-string';
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import QueueAnim from 'rc-queue-anim';
@@ -79,10 +79,11 @@ const Index = () => {
       formatResult: (res: any) => {
         return res;
       },
+      throttleInterval: 1000,
     },
   );
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     init.run();
   }, [pageQuery, sortQuery, location.pathname]);
 

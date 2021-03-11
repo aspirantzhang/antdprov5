@@ -49,6 +49,7 @@ const Page = () => {
       formatResult: (res: any) => {
         return res;
       },
+      throttleInterval: 1000,
     },
   );
 
