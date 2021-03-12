@@ -43,38 +43,43 @@ const Index = () => {
   const [searchForm] = Form.useForm();
   const location = useLocation();
 
-  const init = useRequest<{ data: BasicListApi.ListData }>((values: any) => {
-    return {
-      url: `https://public-api-v2.aspirantzhang.com${location.pathname.replace(
-        '/basic-list',
-        '',
-      )}?X-API-KEY=antd${pageQuery}${sortQuery}`,
-      params: values,
-      paramsSerializer: (params: any) => {
-        return stringify(params, { arrayFormat: 'comma', skipEmptyString: true, skipNull: true });
+  const init = useRequest<{ data: BasicListApi.ListData }>(
+    (values: any) => {
+      return {
+        url: `${location.pathname.replace('/basic-list', '')}?${pageQuery}${sortQuery}`,
+        params: values,
+        paramsSerializer: (params: any) => {
+          return stringify(params, { arrayFormat: 'comma', skipEmptyString: true, skipNull: true });
+        },
+      };
+    },
+    {
+      onSuccess: () => {
+        setSelectedRowKeys([]);
+        setSelectedRows([]);
       },
-    };
-  });
+    },
+  );
   const request = useRequest(
     (values: any) => {
       message.loading({ content: 'Processing...', key: 'process', duration: 0 });
       const { uri, method, ...formValues } = values;
       return {
-        url: `https://public-api-v2.aspirantzhang.com${uri}`,
+        url: `${uri}`,
         method,
         data: {
           ...formValues,
-          'X-API-KEY': 'antd',
         },
       };
     },
     {
       manual: true,
-      onSuccess: (data) => {
+      onSuccess: (data: BasicListApi.Root) => {
         message.success({
           content: data?.message,
           key: 'process',
         });
+        init.run();
       },
       formatResult: (res: any) => {
         return res;
@@ -200,35 +205,39 @@ const Index = () => {
     return (
       <QueueAnim type="top">
         {searchVisible && (
-          <Card className={styles.searchForm} key="searchForm">
-            <Form onFinish={onFinish} form={searchForm}>
-              <Row gutter={24}>
-                <Col sm={6}>
-                  <Form.Item label="ID" name="id" key="id">
-                    <InputNumber style={{ width: '100%' }} />
-                  </Form.Item>
-                </Col>
-                {SearchBuilder(init.data?.layout.tableColumn)}
-              </Row>
-              <Row>
-                <Col sm={24} className={styles.textAlignRight}>
-                  <Space>
-                    <Button type="primary" htmlType="submit">
-                      Submit
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        init.run();
-                        searchForm.resetFields();
-                      }}
-                    >
-                      Clear
-                    </Button>
-                  </Space>
-                </Col>
-              </Row>
-            </Form>
-          </Card>
+          <div key="searchForm">
+            <Card className={styles.searchForm} key="searchForm">
+              <Form onFinish={onFinish} form={searchForm}>
+                <Row gutter={24}>
+                  <Col sm={6}>
+                    <Form.Item label="ID" name="id" key="id">
+                      <InputNumber style={{ width: '100%' }} />
+                    </Form.Item>
+                  </Col>
+                  {SearchBuilder(init.data?.layout.tableColumn)}
+                </Row>
+                <Row>
+                  <Col sm={24} className={styles.textAlignRight}>
+                    <Space>
+                      <Button type="primary" htmlType="submit">
+                        Submit
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          init.run();
+                          searchForm.resetFields();
+                          setSelectedRowKeys([]);
+                          setSelectedRows([]);
+                        }}
+                      >
+                        Clear
+                      </Button>
+                    </Space>
+                  </Col>
+                </Row>
+              </Form>
+            </Card>
+          </div>
         )}
       </QueueAnim>
     );
