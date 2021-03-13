@@ -53,6 +53,12 @@
     component: './BasicList',
   },
   {
+    name: 'model-design',
+    icon: 'table',
+    path: '/modal-design/',
+    component: './ModelDesign',
+  },
+  {
     path: '/',
     redirect: '/welcome',
   },

@@ -78,9 +78,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       }
     },
     menuHeaderRender: undefined,
-    menuDataRender: () => {
-      return initialState?.currentMenu || [];
-    },
+    // menuDataRender: () => {
+    //   return initialState?.currentMenu || [];
+    // },
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     ...initialState?.settings,

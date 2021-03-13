@@ -1,0 +1,51 @@
+layout
+    tableToolbar
+    batchToolbar
+    tableColumn
+dataSource
+
+fields
+action/buttons
+
+----
+tableToolbar : Actions
+batchToolbar : Actions
+batchToolbarTrashed : Actions
+addAction   :   Actions
+editAction  :   Actions
+fields : Fields (fields.hideInColumn !== true => tableColumn)
+
+---Actions---
+text    type    action   uri    method
+
+---Fields---
+title/label     key     type    hideInColumn    editDisabled    sorter
+
+{
+    tableToolbar: {
+        title    type    action   uri    method
+        title    type    action   uri    method
+        title    type    action   uri    method
+        title    type    action   uri    method
+        title    type    action   uri    method
+        title    type    action   uri    method
+    }
+    batchToolbar: {
+        title    type    action   uri    method
+        title    type    action   uri    method
+        title    type    action   uri    method
+        title    type    action   uri    method
+        title    type    action   uri    method
+        title    type    action   uri    method
+    }
+    fields: {
+        title     name     type    hideInColumn    editDisabled    sorter
+        title     name     type    hideInColumn    editDisabled    sorter
+        title     name     type    hideInColumn    editDisabled    sorter
+        
+    }
+}
+
+Jsx             <Form>          <Field component>
+---Jsx Schema   <SchemaForm>    <SchemaMarkupField x-component>
+JsonSchema      <SchemaForm>    <SchemaField>
