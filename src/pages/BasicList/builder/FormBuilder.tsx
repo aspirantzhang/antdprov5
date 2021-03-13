@@ -1,4 +1,3 @@
-import React from 'react';
 import { Input, Form, DatePicker, TreeSelect, Switch, InputNumber, Radio } from 'antd';
 
 const FormBuilder = (data: BasicListApi.Field[] | undefined) => {

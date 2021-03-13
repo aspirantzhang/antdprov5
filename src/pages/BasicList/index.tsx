@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Table,
   Row,
@@ -14,7 +14,7 @@ import {
   InputNumber,
 } from 'antd';
 import { useRequest, useIntl, history, useLocation } from 'umi';
-import { useSessionStorageState, useToggle, useUpdateEffect } from 'ahooks';
+import { useToggle, useUpdateEffect } from 'ahooks';
 import { stringify } from 'query-string';
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import QueueAnim from 'rc-queue-anim';
@@ -33,10 +33,6 @@ const Index = () => {
   const [modalUri, setModalUri] = useState('');
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [tableColumns, setTableColumns] = useSessionStorageState<BasicListApi.Field[]>(
-    'basicListTableColumns',
-    [],
-  );
   const [searchVisible, searchAction] = useToggle(false);
   const { confirm } = AntdModal;
   const lang = useIntl();
@@ -45,6 +41,11 @@ const Index = () => {
 
   const init = useRequest<{ data: BasicListApi.ListData }>(
     (values: any) => {
+      if (values === true) {
+        return {
+          url: `${location.pathname.replace('/basic-list', '')}`,
+        };
+      }
       return {
         url: `${location.pathname.replace('/basic-list', '')}?${pageQuery}${sortQuery}`,
         params: values,
@@ -90,13 +91,11 @@ const Index = () => {
 
   useUpdateEffect(() => {
     init.run();
-  }, [pageQuery, sortQuery, location.pathname]);
+  }, [pageQuery, sortQuery]);
 
-  useEffect(() => {
-    if (init?.data?.layout?.tableColumn) {
-      setTableColumns(ColumnBuilder(init?.data?.layout?.tableColumn, actionHandler));
-    }
-  }, [init?.data?.layout?.tableColumn]);
+  useUpdateEffect(() => {
+    init.run(true);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (modalUri) {
@@ -161,11 +160,12 @@ const Index = () => {
   }
 
   function batchOverview(dataSource: BasicListApi.Field[]) {
+    const tableColumns = ColumnBuilder(init?.data?.layout?.tableColumn, actionHandler);
     return (
       <Table
         size="small"
         rowKey="id"
-        columns={tableColumns ? [tableColumns[0] || {}, tableColumns[1] || {}] : []}
+        columns={[tableColumns[0] || {}, tableColumns[1] || {}]}
         dataSource={dataSource}
         pagination={false}
       />
@@ -303,7 +303,7 @@ const Index = () => {
         <Table
           rowKey="id"
           dataSource={init?.data?.dataSource}
-          columns={tableColumns}
+          columns={ColumnBuilder(init?.data?.layout?.tableColumn, actionHandler)}
           pagination={false}
           loading={init?.loading}
           onChange={tableChangeHandler}

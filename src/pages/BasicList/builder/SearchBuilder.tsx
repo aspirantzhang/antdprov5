@@ -1,4 +1,3 @@
-import React from 'react';
 import moment from 'moment';
 import { Input, Form, DatePicker, TreeSelect, Col, Select } from 'antd';
 
