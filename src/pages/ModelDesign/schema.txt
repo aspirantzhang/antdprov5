@@ -11,6 +11,7 @@ action/buttons
 tableToolbar : Actions
 batchToolbar : Actions
 batchToolbarTrashed : Actions
+listAction  :   Actions
 addAction   :   Actions
 editAction  :   Actions
 fields : Fields (fields.hideInColumn !== true => tableColumn)
@@ -39,9 +40,9 @@ title/label     key     type    hideInColumn    editDisabled    sorter
         title    type    action   uri    method
     }
     fields: {
-        title     name     type    hideInColumn    editDisabled    sorter
-        title     name     type    hideInColumn    editDisabled    sorter
-        title     name     type    hideInColumn    editDisabled    sorter
+        title     name     type    hideInColumn    editDisabled    listSorter
+        title     name     type    hideInColumn    editDisabled    listSorter
+        title     name     type    hideInColumn    editDisabled    listSorter
         
     }
 }
