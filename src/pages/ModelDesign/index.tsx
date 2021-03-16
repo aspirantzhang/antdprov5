@@ -1,33 +1,66 @@
-import { PageContainer } from '@ant-design/pro-layout';
-import { SchemaForm, SchemaMarkupField as Field, Submit, FormEffectHooks } from '@formily/antd';
+import { useState } from 'react';
+import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
+import {
+  SchemaForm,
+  SchemaMarkupField as Field,
+  FormEffectHooks,
+  createFormActions,
+} from '@formily/antd';
+import { Button } from 'antd';
 import { Input, FormCard, ArrayTable, Select, Checkbox } from '@formily/antd-components';
-import { IFormEffect } from '@formily/react/lib';
+import { IFormEffect, IFieldState } from '@formily/react/lib';
+import Modal from './Modal';
 import * as enums from './enums';
 import { schemaExample } from './initialValues';
 import 'antd/dist/antd.css';
+import styles from './index.less';
+
+const modelDesignAction = createFormActions();
 
 const Index = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentFieldPath, setCurrentFieldPath] = useState('');
+
   const onSubmit = (values: any) => {
     console.log(values);
   };
 
-  const { onFieldValueChange$ } = FormEffectHooks;
+  const { onFieldValueChange$, onFieldChange$ } = FormEffectHooks;
 
-  const modelDesignEffect: IFormEffect = (_, { setFieldValue }) => {
-    onFieldValueChange$('fieldsCard.fields.*.type').subscribe((state) => {
-      if (state.value === 'number') {
-        setFieldValue(state.path.replace('type', 'listSorter'), true);
+  const modelDesignEffect: IFormEffect = (_, { setFieldState }) => {
+    onFieldChange$('fieldsCard.fields.*.data').subscribe(({ path, active }) => {
+      if (active === true) {
+        setCurrentFieldPath(path as string);
+        setModalVisible(true);
       }
     });
+    onFieldValueChange$('fieldsCard.fields.*.type').subscribe(({ value, path }) => {
+      if (value === 'switch' || value === 'radio') {
+        setFieldState(path.replace('type', 'data'), (state: IFieldState) => {
+          state.editable = true;
+        });
+      } else {
+        setFieldState(path.replace('type', 'data'), (state: IFieldState) => {
+          state.editable = false;
+        });
+      }
+    });
+  };
+
+  const modalSubmitHandler = (values: any) => {
+    setModalVisible(false);
+    modelDesignAction.setFieldValue(currentFieldPath, values);
   };
 
   return (
     <PageContainer>
       <SchemaForm
-        components={{ Input, ArrayTable, Select, Checkbox }}
+        components={{ Input, ArrayTable, Select, Checkbox, Button }}
         onSubmit={onSubmit}
-        effects={modelDesignEffect}
         initialValues={schemaExample}
+        effects={modelDesignEffect}
+        actions={modelDesignAction}
+        className={styles.formilyForm}
       >
         <FormCard title="Basic" name="basicCard">
           <Field title="Route Name" name="routeName" x-component="Input" />
@@ -39,6 +72,14 @@ const Index = () => {
               <Field title="Name" name="name" x-component="Input" />
               <Field title="Title" name="title" x-component="Input" />
               <Field title="Type" name="type" x-component="Select" enum={enums.fieldType} />
+              <Field
+                title="Data"
+                name="data"
+                x-component="Button"
+                x-component-props={{
+                  children: 'Data',
+                }}
+              />
               <Field title="List Sorter" name="listSorter" x-component="Checkbox" />
               <Field title="Hide InColumn" name="hideInColumn" x-component="Checkbox" />
               <Field title="Edit Disabled" name="editDisabled" x-component="Checkbox" />
@@ -117,8 +158,26 @@ const Index = () => {
             </Field>
           </Field>
         </FormCard>
-        <Submit />
       </SchemaForm>
+      <FooterToolbar
+        extra={
+          <Button
+            type="primary"
+            onClick={() => {
+              modelDesignAction.submit();
+            }}
+          >
+            Submit
+          </Button>
+        }
+      />
+      <Modal
+        modalVisible={modalVisible}
+        hideModal={() => {
+          setModalVisible(false);
+        }}
+        modalSubmitHandler={modalSubmitHandler}
+      />
     </PageContainer>
   );
 };
