@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import {
   SchemaForm,
@@ -8,7 +8,8 @@ import {
 } from '@formily/antd';
 import { Button } from 'antd';
 import { Input, FormCard, ArrayTable, Select, Checkbox } from '@formily/antd-components';
-import { IFormEffect, IFieldState } from '@formily/react/lib';
+import { useSetState } from 'ahooks';
+import type { IFormEffect, IFieldState } from '@formily/react/lib';
 import Modal from './Modal';
 import * as enums from './enums';
 import { schemaExample } from './initialValues';
@@ -20,6 +21,10 @@ const modelDesignAction = createFormActions();
 const Index = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentFieldPath, setCurrentFieldPath] = useState('');
+  const [modalState, setModalState] = useSetState({
+    type: '',
+    values: {},
+  });
 
   const onSubmit = (values: any) => {
     console.log(values);
@@ -27,29 +32,46 @@ const Index = () => {
 
   const { onFieldValueChange$, onFieldChange$ } = FormEffectHooks;
 
-  const modelDesignEffect: IFormEffect = (_, { setFieldState }) => {
-    onFieldChange$('fieldsCard.fields.*.data').subscribe(({ path, active }) => {
+  useEffect(() => {
+    if (modalState.type) {
+      setModalVisible(true);
+    }
+  }, [modalState.type]);
+
+  const modelDesignEffect: IFormEffect = (_, { setFieldState, getFieldValue }) => {
+    onFieldChange$('fieldsCard.fields.*.data').subscribe(({ path, active, value }) => {
       if (active === true) {
         setCurrentFieldPath(path as string);
-        setModalVisible(true);
+        setModalState({
+          values: value,
+          type: getFieldValue(path?.replace('data', 'type')),
+        });
       }
     });
     onFieldValueChange$('fieldsCard.fields.*.type').subscribe(({ value, path }) => {
       if (value === 'switch' || value === 'radio') {
         setFieldState(path.replace('type', 'data'), (state: IFieldState) => {
           state.editable = true;
+          state.required = true;
         });
       } else {
         setFieldState(path.replace('type', 'data'), (state: IFieldState) => {
           state.editable = false;
+          state.required = false;
         });
       }
+    });
+    onFieldValueChange$('basicCard.routeName').subscribe(({ value }) => {
+      setFieldState('*.*.*.uri', (state: IFieldState) => {
+        state.value = state.value?.replace('admins', value);
+      });
     });
   };
 
   const modalSubmitHandler = (values: any) => {
     setModalVisible(false);
-    modelDesignAction.setFieldValue(currentFieldPath, values);
+    modelDesignAction.setFieldValue(currentFieldPath, values.data);
+    setModalState({ type: '', values: {} });
   };
 
   return (
@@ -175,8 +197,10 @@ const Index = () => {
         modalVisible={modalVisible}
         hideModal={() => {
           setModalVisible(false);
+          setModalState({ type: '', values: {} });
         }}
         modalSubmitHandler={modalSubmitHandler}
+        modalState={modalState}
       />
     </PageContainer>
   );

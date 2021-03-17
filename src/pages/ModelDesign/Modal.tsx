@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { SchemaForm, SchemaMarkupField as Field, createFormActions } from '@formily/antd';
 import { Input, ArrayTable, Select, Checkbox } from '@formily/antd-components';
 import { Modal as AntdModal } from 'antd';
@@ -9,38 +10,49 @@ const Modal = ({
   modalVisible,
   hideModal,
   modalSubmitHandler,
+  modalState,
 }: {
   modalVisible: boolean;
   hideModal: (reload?: boolean) => void;
   modalSubmitHandler: (values: any) => void;
+  modalState: { type: string; values: Record<string, unknown> };
 }) => {
-  // const request = useRequest(
-  //   (values: any) => {
-  //     message.loading({ content: 'Processing...', key: 'process', duration: 0 });
-  //     const { uri, method, ...formValues } = values;
-  //     return {
-  //       url: `${uri}`,
-  //       method,
-  //       data: {
-  //         ...formValues,
-  //       },
-  //     };
-  //   },
-  //   {
-  //     manual: true,
-  //     onSuccess: (data) => {
-  //       message.success({
-  //         content: data.message,
-  //         key: 'process',
-  //       });
-  //       hideModal(true);
-  //     },
-  //     formatResult: (res: any) => {
-  //       return res;
-  //     },
-  //     throttleInterval: 1000,
-  //   },
-  // );
+  useEffect(() => {
+    modalAction.reset();
+    if (modalState.values) {
+      modalAction.setFormState((state) => {
+        state.values = {
+          data: modalState.values,
+        };
+      });
+    }
+    if (modalState.type === 'switch') {
+      modalAction.setFieldState('data', (state) => {
+        state.props['x-component-props'] = {
+          operations: false,
+          renderAddition: () => null,
+        };
+      });
+      modalAction.setFormState((state) => {
+        state.values = {
+          data: [
+            {
+              title: 'Enabled',
+              value: 1,
+            },
+            {
+              title: 'Disabled',
+              value: 0,
+            },
+          ],
+        };
+      });
+    } else {
+      modalAction.setFieldState('data', (state) => {
+        state.props['x-component-props'] = {};
+      });
+    }
+  }, [modalState]);
 
   return (
     <div>
