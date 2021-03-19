@@ -32,7 +32,7 @@ const FormBuilder = (data: BasicListApi.Field[] | undefined) => {
       case 'switch':
         return (
           <Form.Item {...basicAttr} valuePropName="checked">
-            <Switch disabled={field.disabled} />
+            <Switch disabled={field.disabled} defaultChecked />
           </Form.Item>
         );
       case 'number':
@@ -52,7 +52,7 @@ const FormBuilder = (data: BasicListApi.Field[] | undefined) => {
           <Form.Item {...basicAttr}>
             <Radio.Group buttonStyle="solid" defaultValue={field.data[0]?.value}>
               {(field.data || []).map((item: any) => {
-                return <Radio.Button value={item.value}>{item.name}</Radio.Button>;
+                return <Radio.Button value={item.value}>{item.title}</Radio.Button>;
               })}
             </Radio.Group>
           </Form.Item>

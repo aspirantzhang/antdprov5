@@ -43,6 +43,12 @@
     component: './TableList',
   },
   {
+    name: 'model-design',
+    icon: 'table',
+    path: '/basic-list/api/models/model-design/*',
+    component: './ModelDesign',
+  },
+  {
     path: '/basic-list/api/*/*',
     component: './BasicList/component/Page',
   },
@@ -52,12 +58,7 @@
     path: '/basic-list/*',
     component: './BasicList',
   },
-  {
-    name: 'model-design',
-    icon: 'table',
-    path: '/modal-design/',
-    component: './ModelDesign',
-  },
+
   {
     path: '/',
     redirect: '/welcome',
