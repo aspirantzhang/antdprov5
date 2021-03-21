@@ -34,7 +34,7 @@ const goto = () => {
   setTimeout(() => {
     const { query } = history.location;
     const { redirect } = query as { redirect: string };
-    history.push(redirect || '/');
+    history.push(redirect ? `/admin/${redirect}` : '/');
   }, 10);
 };
 
@@ -84,8 +84,8 @@ const Login: React.FC = () => {
       <div className={styles.content}>
         <div className={styles.top}>
           <div className={styles.header}>
-            <Link to="/">
-              <img alt="logo" className={styles.logo} src="/logo.svg" />
+            <Link to="/admin/">
+              <img alt="logo" className={styles.logo} src="/admin/logo.svg" />
               <span className={styles.title}>Ant Design</span>
             </Link>
           </div>

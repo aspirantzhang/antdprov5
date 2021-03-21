@@ -46,7 +46,7 @@ export async function getInitialState(): Promise<{
     return undefined;
   };
   // 如果是登录页面，不执行
-  if (history.location.pathname !== '/user/login') {
+  if (history.location.pathname !== '/user/login' && history.location.pathname !== '/api') {
     const currentUser = await fetchUserInfo();
     const currentMenu = await fetchMenu();
     return {
@@ -73,7 +73,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     onPageChange: () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== '/user/login') {
+      if (
+        !initialState?.currentUser &&
+        location.pathname !== '/user/login' &&
+        location.pathname !== '/api'
+      ) {
         history.push('/user/login');
       }
     },

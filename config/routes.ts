@@ -58,7 +58,11 @@
     path: '/basic-list/*',
     component: './BasicList',
   },
-
+  {
+    path: '/api',
+    component: './Api',
+    layout: false,
+  },
   {
     path: '/',
     redirect: '/welcome',
